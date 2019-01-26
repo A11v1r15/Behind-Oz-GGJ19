@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class MapGen : MonoBehaviour
 {
+	public Text World;
 	public Tilemap gridLabirinto;
 	public Tilemap gridBackground;
 	public List<Tile> tiles = new List<Tile> ();
 	public List<Tile> tileBG = new List<Tile> ();
+	public List<Tile> OZtileBG = new List<Tile> ();
 	private const int width = 30;
 	private const int height = 25;
-
+	public static bool OZ = false;
 
 	char[,] maze = new char[height, width];
 	bool flag;
@@ -194,6 +197,15 @@ public class MapGen : MonoBehaviour
 				}
 			}
 		}
+
+		for (int i = 0; i < height; i++) {
+			for (int j = width - 1; j > 0; j--) {
+				if (Random.Range(0,10) == 1 && maze[i,j] == 'B' && numParedes (i,j) == 2 && maze[i+1,j] == 'P' && maze[i-1,j] == 'P') {
+					PlaceNew("Monster", i, j);
+					break;
+				}
+			}
+		}
 	}
 
 
@@ -205,7 +217,7 @@ public class MapGen : MonoBehaviour
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 				{ 
-					gridBackground.SetTile (new Vector3Int (j, -i, 0), tileBG [Mathf.Min (Random.Range (0, 20), 4)]);	     
+					gridBackground.SetTile (new Vector3Int (j, -i, 0), tileBG [Mathf.Min (Random.Range (0, 20), 4)]);
 				}
 			}
 		}
@@ -285,15 +297,27 @@ public class MapGen : MonoBehaviour
 	}
 
 	void Place(string obj, int i, int j){
-		GameObject.Find (obj).transform.SetPositionAndRotation (gridLabirinto.CellToLocal (new Vector3Int (j, -i, 0)) + new Vector3 (0.45f, 0.45f, 0), Quaternion.identity);
+		GameObject.Find (obj).transform.SetPositionAndRotation (gridLabirinto.CellToLocal (new Vector3Int (j, -i, 0)) + new Vector3 (0.45f, 0.45f, -1f), Quaternion.identity);
+	}
+
+	void PlaceNew(string obj, int i, int j){
+		var neo = Instantiate (Resources.Load ("Prefabs/" + obj)) as GameObject;
+		neo.transform.SetPositionAndRotation (gridLabirinto.CellToLocal (new Vector3Int (j, -i, 0)) + new Vector3 (0.45f, 0.45f, -1f), Quaternion.identity);
 	}
 
 	// Start is called before the first frame update
 	void Start ()
 	{
+		OZ = (Random.value < 0.1f) ? true : false;
+		if (OZ){
+			PlayerPrefs.SetInt ("Oz", PlayerPrefs.GetInt ("Oz", 0) + 1);
+			for (int i = 0; i < OZtileBG.Count; i++) {
+				tileBG [i] = OZtileBG [i];
+			}
+		}
 		NovoLabirinto ();
 		ImprimeLabirinto ();
-		PintaTiles (Color.HSVToRGB (Random.value, 1, 1));
+		PintaTiles (OZ? Color.white : Color.HSVToRGB (Random.value, 1, 1));
 		//GameObject.Find ("Main Camera").transform.SetPositionAndRotation (gridLabirinto.CellToLocal (new Vector3Int (3, -3, 0)) + new Vector3 (0, 0, -10f), Quaternion.identity);
 		//GameObject.Find ("Player").transform.SetPositionAndRotation (gridLabirinto.CellToLocal (new Vector3Int (3, -3, 0)), Quaternion.identity);
 	}
@@ -301,6 +325,6 @@ public class MapGen : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-        
+		World.text = "World: " + PlayerPrefs.GetInt ("World", 0);
 	}
 }

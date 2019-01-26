@@ -13,7 +13,12 @@ public class Tornado : MonoBehaviour
 
 	void Update(){
 		if (Vector2.Distance(this.transform.position, player.transform.position) < 0.5f) {
-			SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
+			if (MapGen.OZ) {
+				SceneManager.LoadScene ("GameOver");
+			} else {
+				SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
+			}
+			PlayerPrefs.SetInt ("World", PlayerPrefs.GetInt("World", 0) + 1);
 		}
 	}
 }
