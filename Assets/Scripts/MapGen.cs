@@ -5,10 +5,15 @@ using UnityEngine.Tilemaps;
 
 public class MapGen : MonoBehaviour
 {
-	public Tilemap grid;
-	public Tile tile;
+	public Tilemap gridLabirinto;
+	public Tilemap gridBackground;
+	public List<Tile> tiles = new List<Tile> ();
+	public List<Tile> tileBG = new List<Tile> ();
+	private const int width = 30;
+	private const int height = 25;
 
-	char[,] maze = new char[15, 20];
+
+	char[,] maze = new char[height, width];
 	bool flag;
 
 	//----------------------------------------------------------------
@@ -16,7 +21,7 @@ public class MapGen : MonoBehaviour
 	//----------------------------------------------------------------
 	bool isDentroLabirinto (int i, int j)
 	{
-		if ((i <= 0) || (i >= 15) || (j <= 0) || (j >= 20)) { 
+		if ((i <= 0) || (i >= height) || (j <= 0) || (j >= width)) { 
 			return false;
 		} else {
 			return true;
@@ -28,7 +33,7 @@ public class MapGen : MonoBehaviour
 	//--------------------------------------------------------------------
 	bool isBorda (int i, int j)
 	{
-		if ((i <= 0) || (i >= 15) || (j <= 0) || (j >= 20)) { 
+		if ((i <= 0) || (i >= height) || (j <= 0) || (j >= width)) { 
 			return true;
 		} else {
 			return false;
@@ -78,8 +83,8 @@ public class MapGen : MonoBehaviour
 		Stack<int> pilhaCaminhoSeguido = new Stack<int> ();
 
 		// Define todas as posicoes do labirinto como parede
-		for (int i = 0; i < 15; i++) {
-			for (int j = 0; j < 20; j++) {
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
 				{ 
 					maze [i, j] = 'P';	     
 				}
@@ -89,6 +94,7 @@ public class MapGen : MonoBehaviour
 		// Define a posicao de onde o labirinto irá comecar a ser construido
 		x = 3;
 		y = 3;
+		maze [x, y] = 'B';
 
 		// Variáveis usadas na construcao do labirinto
 		podeConstruir = true;
@@ -181,20 +187,101 @@ public class MapGen : MonoBehaviour
 		}
 	}
 
-	// Start is called before the first frame update
-	void Start ()
+
+	//--------------------------------------------------------------------
+	// Procedimento que imprime o labirinto.
+	//--------------------------------------------------------------------
+	void ImprimeLabirinto ()
 	{
-		NovoLabirinto ();
-		for (int i = 0; i < 15; i++) {
-			for (int j = 0; j < 20; j++) {
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				{ 
+					gridBackground.SetTile (new Vector3Int (j, -i, 0), tileBG [Mathf.Min(Random.Range(0,20),4)]);	     
+				}
+			}
+		}
+
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
 				{ 
 					if (maze [i, j] == 'P') {
-						grid.SetTile (new Vector3Int (j, -i, 0), tile);
+
+						if (i > 0 && maze [i - 1, j] == 'B') {
+							if (i < height - 1 && maze [i + 1, j] == 'B') {
+								if (j < width && maze [i, j + 1] == 'B') {
+									gridLabirinto.SetTile (new Vector3Int (j, -i, 0), tiles [7]);
+								} else if (j > 0 && maze [i, j - 1] == 'B') {
+									gridLabirinto.SetTile (new Vector3Int (j, -i, 0), tiles [9]);
+								} else {
+									gridLabirinto.SetTile (new Vector3Int (j, -i, 0), tiles [5]);
+								}
+							} else {
+								if (j < width && maze [i, j + 1] == 'B') {
+									if (j > 0 && maze [i, j - 1] == 'B') {
+										gridLabirinto.SetTile (new Vector3Int (j, -i, 0), tiles [10]);
+									} else {
+										gridLabirinto.SetTile (new Vector3Int (j, -i, 0), tiles [11]);
+									}
+								} else {
+									if (j > 0 && maze [i, j - 1] == 'B') {
+										gridLabirinto.SetTile (new Vector3Int (j, -i, 0), tiles [14]);
+									} else {
+										gridLabirinto.SetTile (new Vector3Int (j, -i, 0), tiles [1]);
+									}
+								}
+							}
+						} else {
+							if (j < width - 1 && maze [i, j + 1] == 'B') {
+								if (j > 0 && maze [i, j - 1] == 'B') {
+									if (i < height - 1 && maze [i + 1, j] == 'B') {
+										gridLabirinto.SetTile (new Vector3Int (j, -i, 0), tiles [8]);
+									} else {
+										gridLabirinto.SetTile (new Vector3Int (j, -i, 0), tiles [6]);
+									}
+								} else {
+									if (i < height - 1 && maze [i + 1, j] == 'B') {
+										gridLabirinto.SetTile (new Vector3Int (j, -i, 0), tiles [12]);
+									} else {
+										gridLabirinto.SetTile (new Vector3Int (j, -i, 0), tiles [2]);
+									}
+								}
+							} else if (j > 0 && maze [i, j - 1] == 'B') {
+								if (i < height - 1 && maze [i + 1, j] == 'B') {
+									gridLabirinto.SetTile (new Vector3Int (j, -i, 0), tiles [13]);
+								} else {
+									gridLabirinto.SetTile (new Vector3Int (j, -i, 0), tiles [4]);
+								}
+							} else {
+								if (i < height - 1 && maze [i + 1, j] == 'B') {
+									gridLabirinto.SetTile (new Vector3Int (j, -i, 0), tiles [3]);
+								} else {
+									gridLabirinto.SetTile (new Vector3Int (j, -i, 0), tiles [0]);
+								}
+							}
+						}
 					}	     
 				}
 			}
 		}
-		GameObject.Find ("Main Camera").transform.SetPositionAndRotation (grid.CellToLocal (new Vector3Int (3, -3, 0)) + new Vector3 (0, 0, -10f), Quaternion.identity);
+	}
+
+	void PintaTiles(Color color){
+		gridLabirinto.color = color;
+		gridBackground.color = color;
+		foreach (var item in tiles) {
+			item.colliderType = Tile.ColliderType.Sprite;
+		}
+		//GameObject.Find ("Main Camera").GetComponent<Camera> ().backgroundColor = color;
+	}
+
+	// Start is called before the first frame update
+	void Start ()
+	{
+		NovoLabirinto ();
+		ImprimeLabirinto ();
+		PintaTiles (new Color (Random.value, Random.value, Random.value));
+		//GameObject.Find ("Main Camera").transform.SetPositionAndRotation (gridLabirinto.CellToLocal (new Vector3Int (3, -3, 0)) + new Vector3 (0, 0, -10f), Quaternion.identity);
+		//GameObject.Find ("Player").transform.SetPositionAndRotation (gridLabirinto.CellToLocal (new Vector3Int (3, -3, 0)) + new Vector3 (0, 0, -10f), Quaternion.identity);
 	}
 
 	// Update is called once per frame
