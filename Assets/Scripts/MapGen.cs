@@ -186,14 +186,14 @@ public class MapGen : MonoBehaviour
 			}              
 		}
 
-		/*for (int i = 0; i < height; i++) {
-			for (int j = width - 1; j > 0; j++) {
-				if (numParedes (i, j) > 2) {
-					GameObject.Find ("Tornado").transform.SetPositionAndRotation (gridLabirinto.CellToLocal (new Vector3Int (i, -j, 0)) + new Vector3 (0, 0, -10f), Quaternion.identity);
+		for (int i = 0; i < height; i++) {
+			for (int j = width - 1; j > 0; j--) {
+				if (maze[i,j] == 'B' && numParedes (i,j) == 3) {
+					Place("Tornado", i, j);
 					break;
 				}
 			}
-		}*/
+		}
 	}
 
 
@@ -284,14 +284,18 @@ public class MapGen : MonoBehaviour
 		//GameObject.Find ("Main Camera").GetComponent<Camera> ().backgroundColor = color;
 	}
 
+	void Place(string obj, int i, int j){
+		GameObject.Find (obj).transform.SetPositionAndRotation (gridLabirinto.CellToLocal (new Vector3Int (j, -i, 0)) + new Vector3 (0.45f, 0.45f, 0), Quaternion.identity);
+	}
+
 	// Start is called before the first frame update
 	void Start ()
 	{
 		NovoLabirinto ();
 		ImprimeLabirinto ();
-		PintaTiles (new Color (Random.value, Random.value, Random.value));
+		PintaTiles (Color.HSVToRGB (Random.value, 1, 1));
 		//GameObject.Find ("Main Camera").transform.SetPositionAndRotation (gridLabirinto.CellToLocal (new Vector3Int (3, -3, 0)) + new Vector3 (0, 0, -10f), Quaternion.identity);
-		//GameObject.Find ("Player").transform.SetPositionAndRotation (gridLabirinto.CellToLocal (new Vector3Int (3, -3, 0)) + new Vector3 (0, 0, -10f), Quaternion.identity);
+		//GameObject.Find ("Player").transform.SetPositionAndRotation (gridLabirinto.CellToLocal (new Vector3Int (3, -3, 0)), Quaternion.identity);
 	}
 
 	// Update is called once per frame
