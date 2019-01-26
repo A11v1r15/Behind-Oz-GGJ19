@@ -185,6 +185,15 @@ public class MapGen : MonoBehaviour
 				} 
 			}              
 		}
+
+		/*for (int i = 0; i < height; i++) {
+			for (int j = width - 1; j > 0; j++) {
+				if (numParedes (i, j) > 2) {
+					GameObject.Find ("Tornado").transform.SetPositionAndRotation (gridLabirinto.CellToLocal (new Vector3Int (i, -j, 0)) + new Vector3 (0, 0, -10f), Quaternion.identity);
+					break;
+				}
+			}
+		}*/
 	}
 
 
@@ -196,7 +205,7 @@ public class MapGen : MonoBehaviour
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 				{ 
-					gridBackground.SetTile (new Vector3Int (j, -i, 0), tileBG [Mathf.Min(Random.Range(0,20),4)]);	     
+					gridBackground.SetTile (new Vector3Int (j, -i, 0), tileBG [Mathf.Min (Random.Range (0, 20), 4)]);	     
 				}
 			}
 		}
@@ -265,7 +274,8 @@ public class MapGen : MonoBehaviour
 		}
 	}
 
-	void PintaTiles(Color color){
+	void PintaTiles (Color color)
+	{
 		gridLabirinto.color = color;
 		gridBackground.color = color;
 		foreach (var item in tiles) {
