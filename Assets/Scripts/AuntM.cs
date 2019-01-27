@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
@@ -115,11 +116,14 @@ public class AuntM : MonoBehaviour
 			this.transform.localScale = new Vector3 (this.transform.localScale.x, 0.1f, 0.1f);
 		}*/
 		anmtr.SetBool ("idle", (rgdbd.velocity == Vector2.zero));
-	}
-
-	void OnTriggerEnter (Collider other)
-	{
-		Debug.Log ("Hei!");
+		if (transform.position.y < -25) {
+			if (MapGen.OZ) {
+				SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
+				PlayerPrefs.SetInt ("World", PlayerPrefs.GetInt("World", 0) + 1);
+			} else {
+				transform.SetPositionAndRotation (GameObject.FindObjectOfType<Grid> ().CellToLocal (new Vector3Int (3, -3, 0)) + new Vector3 (0.45f, 0.45f, 0), Quaternion.identity);
+			}
+		}
 	}
 
 	public void ChangeSapatos (int i)
