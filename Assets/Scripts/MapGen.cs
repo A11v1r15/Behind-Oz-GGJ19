@@ -206,6 +206,17 @@ public class MapGen : MonoBehaviour
 				}
 			}
 		}
+
+		if (Random.Range (0, 10) == 1) {
+			for (int i = 0; i < height; i++) {
+				for (int j = 0; j < width; j++) {
+					if (maze[i,j] == 'B' && numParedes (i,j) == 3) {
+						Place ("Sapatos", i, j);
+						break;
+					}
+				}
+			}
+		}
 	}
 
 
