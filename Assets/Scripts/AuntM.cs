@@ -13,7 +13,7 @@ public class AuntM : MonoBehaviour
 	private static bool S2 = false;
 	private static bool S3 = false;
 	private static bool S4 = false;
-	private static int currentS = -1;
+	public int currentS = -1;
 	public static AuntM singleton;
 
 	public List<Button> buttons;
@@ -41,33 +41,19 @@ public class AuntM : MonoBehaviour
 			rgdbd.AddForce (Vector2.right * 3);
 		}
 		if (Input.GetKeyDown ("w") || Input.GetKeyDown (KeyCode.UpArrow)) {
-			if (currentS == 3 || GameObject.Find ("Plataformas").GetComponent<Tilemap> ().GetSprite ((GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position + new Vector3 (0, -0.5f, 0)))) != null){
+			if (currentS == 3 || GameObject.Find ("Plataformas").GetComponent<Tilemap> ().GetSprite ((GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position + new Vector3 (0, -0.5f, 0)))) != null) {
 				rgdbd.AddForce (Vector2.up * 300);
 			}
 		}
-		if (S4 && Input.GetKeyDown (KeyCode.Space)) {
-			if (Mathf.Abs (rgdbd.velocity.x) > Mathf.Abs (rgdbd.velocity.y)) {
-				rgdbd.velocity = new Vector2 (rgdbd.velocity.x, 0f);
-				if (rgdbd.velocity.x > 0) {
-					if (GameObject.Find ("Plataformas").GetComponent<Tilemap> ().GetSprite (GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position) + new Vector3Int(2,0,0)) != null) {
-						this.transform.SetPositionAndRotation (GameObject.FindObjectOfType<Grid> ().CellToLocal (GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position) + new Vector3Int(2,0,0)), Quaternion.identity);
-					}
-				} else if (rgdbd.velocity.x < 0) {
-					if (GameObject.Find ("Plataformas").GetComponent<Tilemap> ().GetSprite (GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position) + new Vector3Int(-2,0,0)) != null) {
-						this.transform.SetPositionAndRotation (GameObject.FindObjectOfType<Grid> ().CellToLocal (GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position) + new Vector3Int(-2,0,0)), Quaternion.identity);
-					}
-				}
-			} else if (Mathf.Abs (rgdbd.velocity.x) < Mathf.Abs (rgdbd.velocity.y)){
-				rgdbd.velocity = new Vector2 (0f, rgdbd.velocity.y);
-				if (rgdbd.velocity.y > 0) {
-					if (GameObject.Find ("Plataformas").GetComponent<Tilemap> ().GetSprite (GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position) + new Vector3Int(0,2,0)) != null) {
-						this.transform.SetPositionAndRotation (GameObject.FindObjectOfType<Grid> ().CellToLocal (GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position) + new Vector3Int(2,0,0)), Quaternion.identity);
-					}
-				} else if (rgdbd.velocity.y < 0){
-					if (GameObject.Find ("Plataformas").GetComponent<Tilemap> ().GetSprite (GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position) + new Vector3Int(0,-2,0)) != null) {
-						this.transform.SetPositionAndRotation (GameObject.FindObjectOfType<Grid> ().CellToLocal (GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position) + new Vector3Int(-2,0,0)), Quaternion.identity);
-					}
-				}
+		if (currentS == 4 && Input.GetKeyDown (KeyCode.Space)) {
+			       if (Input.GetKey ("a") || Input.GetKey (KeyCode.LeftArrow)) {
+				this.transform.SetPositionAndRotation (GameObject.FindObjectOfType<Grid> ().CellToLocal (GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position) + new Vector3Int (-2, 0, 0)), Quaternion.identity);
+			} else if (Input.GetKey ("d") || Input.GetKey (KeyCode.RightArrow)) {
+				this.transform.SetPositionAndRotation (GameObject.FindObjectOfType<Grid> ().CellToLocal (GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position) + new Vector3Int (2, 0, 0)), Quaternion.identity);
+			} else if (Input.GetKey ("w") || Input.GetKey (KeyCode.UpArrow)) {
+				this.transform.SetPositionAndRotation (GameObject.FindObjectOfType<Grid> ().CellToLocal (GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position) + new Vector3Int (0, 2, 0)), Quaternion.identity);
+			} else if (Input.GetKey ("s") || Input.GetKey (KeyCode.DownArrow)) {
+				this.transform.SetPositionAndRotation (GameObject.FindObjectOfType<Grid> ().CellToLocal (GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position) + new Vector3Int (0, -2, 0)), Quaternion.identity);
 			}
 		}
 		if (S0 && Input.GetKeyDown (KeyCode.Alpha1)) {
@@ -84,6 +70,9 @@ public class AuntM : MonoBehaviour
 		}
 		if (S4 && Input.GetKeyDown (KeyCode.Alpha5)) {
 			ChangeSapatos (4);
+		}
+		if (S4 && Input.GetKeyDown (KeyCode.Alpha0)) {
+			ChangeSapatos (-1);
 		}
 		if (S0) {
 			buttons [0].gameObject.SetActive (true);
@@ -133,7 +122,8 @@ public class AuntM : MonoBehaviour
 		Debug.Log ("Hei!");
 	}
 
-	public void ChangeSapatos(int i){
+	public void ChangeSapatos (int i)
+	{
 		currentS = i;
 		switch (i) {
 		case 0:

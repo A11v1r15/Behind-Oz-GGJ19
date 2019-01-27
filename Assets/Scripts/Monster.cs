@@ -7,7 +7,7 @@ public class Monster : MonoBehaviour
 {
 	private GameObject player;
 	private Rigidbody2D rgdbd;
-	int direction;
+	int direction = -1;
 
     // Start is called before the first frame update
     void Start()
@@ -36,10 +36,9 @@ public class Monster : MonoBehaviour
     }
 
 	IEnumerator walk (){
-		direction = 1;
-		yield return new WaitForSeconds (2);
-		direction = -1;
-		yield return new WaitForSeconds (2);
+		direction *= -1;
+		this.transform.localScale = new Vector3 (-this.transform.localScale.x, this.transform.localScale.y, this.transform.localScale.z);
+		yield return new WaitForSeconds (Random.value * 4);
 		StartCoroutine (walk ());
 	}
 }

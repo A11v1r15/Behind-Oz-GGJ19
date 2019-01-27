@@ -192,7 +192,7 @@ public class MapGen : MonoBehaviour
 		for (int i = 0; i < height; i++) {
 			for (int j = width - 1; j > 0; j--) {
 				if (maze[i,j] == 'B' && numParedes (i,j) == 3) {
-					Place("Tornado", i, j);
+					Place ("Tornado", i, j);
 					break;
 				}
 			}
@@ -201,8 +201,24 @@ public class MapGen : MonoBehaviour
 		for (int i = 0; i < height; i++) {
 			for (int j = width - 1; j > 0; j--) {
 				if (Random.Range(0,10) == 1 && maze[i,j] == 'B' && numParedes (i,j) == 2 && maze[i+1,j] == 'P' && maze[i-1,j] == 'P') {
-					PlaceNew("Monster", i, j);
+					if (OZ? Random.Range(0,3) != 0 : Random.Range (0, 4) == 0) {
+						PlaceNew ("TinLionCrow", i, j);
+					} else {
+						PlaceNew ("Monster", i, j);
+					}
 					break;
+				}
+			}
+		}
+
+		for (int i = 0; i < height; i++) {
+			for (int j = width - 1; j > 0; j--) {
+				if (maze[i,j] == 'B' && numParedes (i,j) == 2 && maze[i,j+1] == 'P' && maze[i,j-1] == 'P') {
+					if (i%2 != 0) {
+						PlaceNew ("SpringL", i, j);
+					} else {
+						PlaceNew ("SpringR", i, j);
+					}
 				}
 			}
 		}
