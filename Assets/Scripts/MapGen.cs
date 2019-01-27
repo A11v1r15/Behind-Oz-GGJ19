@@ -204,7 +204,7 @@ public class MapGen : MonoBehaviour
 					if (OZ? Random.Range(0,3) != 0 : Random.Range (0, 4) == 0) {
 						PlaceNew ("TinLionCrow", i, j);
 					} else {
-						PlaceNew ("Monster", i, j);
+						PlaceNew (((i+j)%2 == 0)? "Monster" : "Hunter", i, j);
 					}
 					break;
 				}
@@ -214,7 +214,7 @@ public class MapGen : MonoBehaviour
 		for (int i = 0; i < height; i++) {
 			for (int j = width - 1; j > 0; j--) {
 				if (maze[i,j] == 'B' && numParedes (i,j) == 2 && maze[i,j+1] == 'P' && maze[i,j-1] == 'P') {
-					if (i%2 != 0) {
+					if (i%2 == 0) {
 						PlaceNew ("SpringL", i, j);
 					} else {
 						PlaceNew ("SpringR", i, j);
@@ -223,7 +223,7 @@ public class MapGen : MonoBehaviour
 			}
 		}
 
-		if (Random.Range (0, 10) == 1) {
+		if (Random.Range (0, 7) == 1) {
 			for (int i = 0; i < height; i++) {
 				for (int j = 0; j < width; j++) {
 					if (maze[i,j] == 'B' && numParedes (i,j) == 3) {
@@ -244,7 +244,7 @@ public class MapGen : MonoBehaviour
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 				{ 
-					gridBackground.SetTile (new Vector3Int (j, -i, 0), tileBG [Mathf.Min (Random.Range (0, 20), 4)]);
+					gridBackground.SetTile (new Vector3Int (j, -i, 0), tileBG [(Random.value < 0.01)? Random.Range (17, 19) : Random.Range (0, 17)]);
 				}
 			}
 		}
@@ -335,7 +335,7 @@ public class MapGen : MonoBehaviour
 	// Start is called before the first frame update
 	void Start ()
 	{
-		OZ = (Random.value < 0.1f) ? true : false;
+		OZ = (Random.value < Mathf.Min(0.05f * PlayerPrefs.GetInt("World",0),0.3f)) ? true : false;
 		if (OZ){
 			PlayerPrefs.SetInt ("Oz", PlayerPrefs.GetInt ("Oz", 0) + 1);
 			for (int i = 0; i < OZtileBG.Count; i++) {

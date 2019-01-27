@@ -16,6 +16,7 @@ public class AuntM : MonoBehaviour
 	private static bool S4 = false;
 	public int currentS = -1;
 	public static AuntM singleton;
+	public GameObject shoes;
 
 	public List<Button> buttons;
 
@@ -33,27 +34,28 @@ public class AuntM : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-		if (Input.GetKey ("a") || Input.GetKey (KeyCode.LeftArrow)) {
+		if (Input.GetKey (KeyCode.LeftArrow)) {
 			this.transform.localScale = new Vector3 (-0.1f, this.transform.localScale.y, 0.1f);
-			rgdbd.AddForce (Vector2.left * 3);
+			rgdbd.AddForce (Vector2.left * ((currentS == 2) ? 3 : 1.5f));
 		}
-		if (Input.GetKey ("d") || Input.GetKey (KeyCode.RightArrow)) {
+		if (Input.GetKey (KeyCode.RightArrow)) {
 			this.transform.localScale = new Vector3 (0.1f, this.transform.localScale.y, 0.1f);
-			rgdbd.AddForce (Vector2.right * 3);
+			rgdbd.AddForce (Vector2.right * ((currentS == 2) ? 3 : 1.5f));
 		}
-		if (Input.GetKeyDown ("w") || Input.GetKeyDown (KeyCode.UpArrow)) {
+		if (Input.GetKeyDown (KeyCode.UpArrow)) {
 			if (currentS == 3 || GameObject.Find ("Plataformas").GetComponent<Tilemap> ().GetSprite ((GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position + new Vector3 (0, -0.5f, 0)))) != null) {
 				rgdbd.AddForce (Vector2.up * 300);
 			}
 		}
 		if (currentS == 4 && Input.GetKeyDown (KeyCode.Space)) {
-			       if (Input.GetKey ("a") || Input.GetKey (KeyCode.LeftArrow)) {
+			rgdbd.velocity = Vector2.zero;
+			       if (Input.GetKey (KeyCode.LeftArrow)) {
 				this.transform.SetPositionAndRotation (GameObject.FindObjectOfType<Grid> ().CellToLocal (GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position) + new Vector3Int (-2, 0, 0)), Quaternion.identity);
-			} else if (Input.GetKey ("d") || Input.GetKey (KeyCode.RightArrow)) {
+			} else if (Input.GetKey (KeyCode.RightArrow)) {
 				this.transform.SetPositionAndRotation (GameObject.FindObjectOfType<Grid> ().CellToLocal (GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position) + new Vector3Int (2, 0, 0)), Quaternion.identity);
-			} else if (Input.GetKey ("w") || Input.GetKey (KeyCode.UpArrow)) {
+			} else if (Input.GetKey (KeyCode.UpArrow)) {
 				this.transform.SetPositionAndRotation (GameObject.FindObjectOfType<Grid> ().CellToLocal (GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position) + new Vector3Int (0, 2, 0)), Quaternion.identity);
-			} else if (Input.GetKey ("s") || Input.GetKey (KeyCode.DownArrow)) {
+			} else if (Input.GetKey (KeyCode.DownArrow)) {
 				this.transform.SetPositionAndRotation (GameObject.FindObjectOfType<Grid> ().CellToLocal (GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position) + new Vector3Int (0, -2, 0)), Quaternion.identity);
 			}
 		}
@@ -92,22 +94,22 @@ public class AuntM : MonoBehaviour
 		}
 		switch (currentS) {
 		case 0:
-			this.GetComponent<SpriteRenderer> ().color = Color.cyan;
+			shoes.GetComponent<SpriteRenderer> ().color = Color.cyan;	// Plataformas livres
 			break;
 		case 1:
-			this.GetComponent<SpriteRenderer> ().color = Color.yellow;
+			shoes.GetComponent<SpriteRenderer> ().color = Color.yellow;	// Invencibilidade
 			break;
 		case 2:
-			this.GetComponent<SpriteRenderer> ().color = Color.blue;
+			shoes.GetComponent<SpriteRenderer> ().color = Color.blue;	// Speed
 			break;
 		case 3:
-			this.GetComponent<SpriteRenderer> ().color = Color.green;
+			shoes.GetComponent<SpriteRenderer> ().color = Color.green;	// Pulo livre
 			break;
 		case 4:
-			this.GetComponent<SpriteRenderer> ().color = Color.red;
+			shoes.GetComponent<SpriteRenderer> ().color = Color.red;		// Teletransporte
 			break;
 		default:
-			this.GetComponent<SpriteRenderer> ().color = Color.white;
+			shoes.GetComponent<SpriteRenderer> ().color = Color.white;	// Descalça
 			break;
 		}
 		/*if (rgdbd.velocity.y < 0) {
@@ -116,6 +118,7 @@ public class AuntM : MonoBehaviour
 			this.transform.localScale = new Vector3 (this.transform.localScale.x, 0.1f, 0.1f);
 		}*/
 		anmtr.SetBool ("idle", (rgdbd.velocity == Vector2.zero));
+		GetComponentsInChildren<Animator>()[1].SetBool ("idle", (rgdbd.velocity == Vector2.zero));
 		if (transform.position.y < -25) {
 			if (MapGen.OZ) {
 				SceneManager.LoadScene (SceneManager.GetActiveScene ().name);

@@ -22,7 +22,7 @@ public class Monster : MonoBehaviour
 	{
 		rgdbd.AddForce (Vector2.right * 1.5f * direction);
 		if (Vector2.Distance(this.transform.position, player.transform.position) < 0.3f) {
-			if (player.GetComponent<Rigidbody2D> ().velocity.y < -0.1) {
+			if (AuntM.singleton.currentS == 1 || player.GetComponent<Rigidbody2D> ().velocity.y < -0.1 && player.transform.position.y > transform.position.y + 0.1f) {
 				Destroy (this.gameObject);
 			} else {
 				if (MapGen.OZ) {
