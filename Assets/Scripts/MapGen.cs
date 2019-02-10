@@ -241,10 +241,12 @@ public class MapGen : MonoBehaviour
 	//--------------------------------------------------------------------
 	void ImprimeLabirinto ()
 	{
-		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < width; j++) {
-				{ 
-					gridBackground.SetTile (new Vector3Int (j, -i, 0), tileBG [(Random.value < 0.01)? Random.Range (17, 19) : Random.Range (0, 17)]);
+		if (!OZ) {
+			for (int i = 0; i < height; i++) {
+				for (int j = 0; j < width; j++) {
+					{ 
+						gridBackground.SetTile (new Vector3Int (j, -i, 0), tileBG [(Random.value < 0.01) ? Random.Range (17, 19) : Random.Range (0, 17)]);
+					}
 				}
 			}
 		}
@@ -336,12 +338,12 @@ public class MapGen : MonoBehaviour
 	void Start ()
 	{
 		OZ = (Random.value < Mathf.Min(0.05f * PlayerPrefs.GetInt("World",0),0.3f)) ? true : false;
-		if (OZ){
+		/*if (OZ){
 			PlayerPrefs.SetInt ("Oz", PlayerPrefs.GetInt ("Oz", 0) + 1);
 			for (int i = 0; i < OZtileBG.Count; i++) {
 				tileBG [i] = OZtileBG [i];
 			}
-		}
+		}*/
 		NovoLabirinto ();
 		ImprimeLabirinto ();
 		PintaTiles (OZ? Color.white : Color.HSVToRGB (Random.value, 1, 1));

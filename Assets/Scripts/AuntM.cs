@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿	using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -29,6 +29,9 @@ public class AuntM : MonoBehaviour
 		foreach (var item in buttons) {
 			item.gameObject.SetActive (false);
 		}
+		if (PlayerPrefs.GetInt("World", 0) == 0){
+			ResetSapatos ();
+		}
 	}
 
 	// Update is called once per frame
@@ -36,11 +39,11 @@ public class AuntM : MonoBehaviour
 	{
 		if (Input.GetKey (KeyCode.LeftArrow)) {
 			this.transform.localScale = new Vector3 (-0.1f, this.transform.localScale.y, 0.1f);
-			rgdbd.AddForce (Vector2.left * ((currentS == 2) ? 3 : 1.5f));
+			rgdbd.AddForce (Vector2.left * Time.deltaTime * ((currentS == 2) ? 300 : 150));
 		}
 		if (Input.GetKey (KeyCode.RightArrow)) {
 			this.transform.localScale = new Vector3 (0.1f, this.transform.localScale.y, 0.1f);
-			rgdbd.AddForce (Vector2.right * ((currentS == 2) ? 3 : 1.5f));
+			rgdbd.AddForce (Vector2.right * Time.deltaTime * ((currentS == 2) ? 300 : 150));
 		}
 		if (Input.GetKeyDown (KeyCode.UpArrow)) {
 			if (currentS == 3 || GameObject.Find ("Plataformas").GetComponent<Tilemap> ().GetSprite ((GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position + new Vector3 (0, -0.5f, 0)))) != null) {
@@ -106,7 +109,7 @@ public class AuntM : MonoBehaviour
 			shoes.GetComponent<SpriteRenderer> ().color = Color.green;	// Pulo livre
 			break;
 		case 4:
-			shoes.GetComponent<SpriteRenderer> ().color = Color.red;		// Teletransporte
+			shoes.GetComponent<SpriteRenderer> ().color = Color.red;	// Teletransporte
 			break;
 		default:
 			shoes.GetComponent<SpriteRenderer> ().color = Color.white;	// Descalça
@@ -149,6 +152,15 @@ public class AuntM : MonoBehaviour
 			AuntM.S4 = true;
 			break;
 		}
+	}
+
+	public void ResetSapatos ()
+	{
+		AuntM.S0 = false;
+		AuntM.S1 = false;
+		AuntM.S2 = false;
+		AuntM.S3 = false;
+		AuntM.S4 = false;
 	}
 }
 

@@ -20,7 +20,7 @@ public class Monster : MonoBehaviour
     // Update is called once per frame
     void Update()
 	{
-		rgdbd.AddForce (Vector2.right * 1.5f * direction);
+		rgdbd.AddForce (Vector2.right * 150 * Time.deltaTime * direction);
 		if (Vector2.Distance(this.transform.position, player.transform.position) < 0.3f) {
 			if (AuntM.singleton.currentS == 1 || player.GetComponent<Rigidbody2D> ().velocity.y < -0.1 && player.transform.position.y > transform.position.y + 0.1f) {
 				Destroy (this.gameObject);
