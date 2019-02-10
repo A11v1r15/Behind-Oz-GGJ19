@@ -39,11 +39,11 @@ public class AuntM : MonoBehaviour
 	{
 		if (Input.GetKey (KeyCode.LeftArrow)) {
 			this.transform.localScale = new Vector3 (-0.1f, this.transform.localScale.y, 0.1f);
-			rgdbd.AddForce (Vector2.left * Time.deltaTime * ((currentS == 2) ? 300 : 150));
+			rgdbd.AddForce (Vector2.left * Time.deltaTime * ((currentS == 2) ? 600 : 300));
 		}
 		if (Input.GetKey (KeyCode.RightArrow)) {
 			this.transform.localScale = new Vector3 (0.1f, this.transform.localScale.y, 0.1f);
-			rgdbd.AddForce (Vector2.right * Time.deltaTime * ((currentS == 2) ? 300 : 150));
+			rgdbd.AddForce (Vector2.right * Time.deltaTime * ((currentS == 2) ? 600 : 300));
 		}
 		if (Input.GetKeyDown (KeyCode.UpArrow)) {
 			if (currentS == 3 || GameObject.Find ("Plataformas").GetComponent<Tilemap> ().GetSprite ((GameObject.FindObjectOfType<Grid> ().LocalToCell (this.transform.position + new Vector3 (0, -0.5f, 0)))) != null) {

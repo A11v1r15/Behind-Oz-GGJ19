@@ -11,7 +11,7 @@ public class MapGen : MonoBehaviour
 	public Tilemap gridBackground;
 	public List<Tile> tiles = new List<Tile> ();
 	public List<Tile> tileBG = new List<Tile> ();
-	public List<Tile> OZtileBG = new List<Tile> ();
+	public GameObject OZbg;
 	private const int width = 30;
 	private const int height = 25;
 	public static bool OZ = false;
@@ -322,7 +322,7 @@ public class MapGen : MonoBehaviour
 		foreach (var item in tiles) {
 			item.colliderType = Tile.ColliderType.Sprite;
 		}
-		//GameObject.Find ("Main Camera").GetComponent<Camera> ().backgroundColor = color;
+		GameObject.Find ("Directional Light").GetComponent<Light> ().color = color;
 	}
 
 	void Place(string obj, int i, int j){
@@ -337,13 +337,11 @@ public class MapGen : MonoBehaviour
 	// Start is called before the first frame update
 	void Start ()
 	{
-		OZ = (Random.value < Mathf.Min(0.05f * PlayerPrefs.GetInt("World",0),0.3f)) ? true : false;
-		/*if (OZ){
+		OZ = (Random.value < Mathf.Min(0.03f * PlayerPrefs.GetInt("World",0),0.3f)) ? true : false;
+		if (OZ){
 			PlayerPrefs.SetInt ("Oz", PlayerPrefs.GetInt ("Oz", 0) + 1);
-			for (int i = 0; i < OZtileBG.Count; i++) {
-				tileBG [i] = OZtileBG [i];
-			}
-		}*/
+			OZbg.SetActive (true);
+		}
 		NovoLabirinto ();
 		ImprimeLabirinto ();
 		PintaTiles (OZ? Color.white : Color.HSVToRGB (Random.value, 1, 1));
